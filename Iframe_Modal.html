@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head> 
+	<title>Prueba</title>
+	<script src="https://testapi.siemprepago.com/v1/Scripts/PWCheckout.js?key=Ay1wIDGlI7b2w9teTR_TPm_I56ONV7HQ" type="text/javascript"></script>
+	<script type="text/javascript">
+		 var token;
+		 
+		 
+		
+
+		 
+		 function registroNotificacion(notification){
+		 console.log("antes del notificationGet");
+			console.log(notification.ProcessType);
+			console.log(notification.ProcessStatus);
+
+		 }
+
+		 
+		function onIframeClosed(){
+			console.log("El iframe se cerro");
+			var tiempo= new Date();
+		   console.log(tiempo.getHours() + ':' + tiempo.getMinutes() + ':' + tiempo.getSeconds() + ':' + tiempo.getMilliseconds());
+		}
+		function tokenGenerado(token){
+			 console.log(token.TokenId);
+			 //alert(token.TokenId);
+			 document.getElementById("token").value = token.TokenId;
+			 console.log("Bin:" + token.Bin);
+			  console.log(token.Owner);
+			  console.log("antes del stingify del token");
+			  console.log(JSON.stringify(token));
+			 //alert(token.Name);
+			 return false;
+		 }
+		
+		PWCheckout.Bind("notificationReceived", registroNotificacion);
+		PWCheckout.Bind("tokenCreated", tokenGenerado);
+		PWCheckout.Bind("closed", onIframeClosed);
+		 
+		
+		 PWCheckout.SetProperties(
+			 {
+			 "name": "Formulario de prueba",
+			 "email": "correo@bamboopayment.com",
+			 "description": "Checkout de Mi tienda",
+			 "currency": "UYU",
+			 "email_edit": "false",
+			 "email_hide": "false",
+			 "form_id": "formPrueba",
+			 "checkout_card": "1",
+			 "autoSubmit": "false",
+			 "close_onclick": "false"
+			 }
+		 );
+		 PWCheckout.SetStyle(
+			 {
+			"backgroundColor": "f2f2f2",
+			"buttonColor": "555555",
+			"buttonHoverColor": "777777",
+			"buttonTextColor": "ffffff",
+			"buttonTextHoverColor": "ffffff",
+			"inputBackgroundColor": "ffffff",
+			"inputTextColor": "767676",
+			"inputErrorColor": "ff0000",
+			"inputAddonBackgroundColor": "ffffff",
+			"labelColor": "494949"
+			 }
+		 );
+		console.log("antes del addaction");
+		PWCheckout.AddActionButton("btnPrueba");
+		console.log("despues del addaction");
+		
+		function loadOpenIframeCustom(){
+		  var tiempo= new Date();
+		   console.log("comienza open iframe custom"+ tiempo.getHours() + ':' + tiempo.getMinutes() + ':' + tiempo.getSeconds() + ':' + tiempo.getMilliseconds());
+			var UniqueId = "UI_e7971c12-eaf2-4413-b3f3-2bce68d0c455";
+			//PWCheckout.Iframe.OpenIframeWithPaymentMediaOptions(1,3);
+            //Captura para Customer sin reestriccion de medio de pago o banco
+			PWCheckout.OpenIframeCustom("https://testapi.siemprepago.com/v1/Capture?key=Ay1wIDGlI7b2w9teTR_TPm_I56ONV7HQ&session_id=" + UniqueId, UniqueId);		
+			//console.log("despues de open iframe custom"+ tiempo.getHours() + ':' + tiempo.getMinutes() + ':' + tiempo.getSeconds() + ':' + tiempo.getMilliseconds());
+			//Captura para Customer con reestriccion de medio de pago VISA -->
+			//PWCheckout.Iframe.OpenIframeCustomWithPaymentMediaOptions("https://testapi.siemprepago.com/v1/Capture?key=Bqmo1UumglqeOxTrHQhsR2_I56ONV7HQ&session_id=" + UniqueId, UniqueId, 4);
+			//
+			//PWCheckout.Iframe.OpenIframeWithPaymentMediaOptions(1,3);  
+			//Captura para Customer con reestriccion de medio de pago VISA y Banco Scotiabank-->
+			//PWCheckout.Iframe.OpenIframeCustomWithPaymentMediaOptions("https://api.siemprepago.com/v1/Capture?key=Bqmo1UumglqeOxTrHQhsR2_I56ONV7HQ&session_id=" + UniqueId, UniqueId, 1, 2);
+
+            //Captura para Customer con reestriccion de Banco Scotiabank
+			//PWCheckout.Iframe.OpenIframeCustomWithPaymentMediaOptions("https://testapi.siemprepago.com/v1/Capture?key=Bqmo1UumglqeOxTrHQhsR2_I56ONV7HQ&session_id=" + UniqueId, UniqueId, null, 5);
+			
+			//Captura para Customer con reestriccion de medio de pago VISA, Banco Scotiabank y Tipo de tarjeta Credito -->
+			//PWCheckout.Iframe.OpenIframeCustomWithPaymentMediaOptions("https://testapi.siemprepago.com/v1/Capture?key=Bqmo1UumglqeOxTrHQhsR2_I56ONV7HQ&session_id=" + UniqueId, UniqueId, 1, 5, 1);
+		 console.log("termina LoadOpenIframeCustom");
+		 }
+		 
+		 
+		 function solicitoCodigoDeVerificacion(){
+			PWCheckout.PWCapture("https://testsecure.siemprepago.com/?key=Ay1wIDGlI7b2w9teTR_TPm_I56ONV7HQ&session_id=CA_4043abfd-2ff9-4a97-a9ec-8298aab23beb&paymentProfileId=62791&brand=MasterCard&lastFour=0001&deviceFingerPrintParams=e30=");
+		 }
+		 function solicitoCustomToken(){
+			//PWCheckout.GetCustomRedirectToken(108, "mail@bamboopayment.com");
+			//PWCheckout.GetCustomToken(10, "mail@bamboopayment.com", 12345672);
+		 }
+
+			
+	function callbackFunction(xmlhttp) 
+	{
+		//alert(xmlhttp.responseXML);
+	}
+
+ </script>
+
+
+</head>
+<!-- <body onload="loadOpenIframeCustom()"> -->
+<body>
+<h2>Formulario de prueba</h2>
+
+<form id="formPrueba" >
+  <input type="button" name="btnPrueba" id="btnPrueba" value="Submit"> <br/><br/>
+  <input type="button" name="btnOpenIframeCustom" id="btnOpenIframeCustom" value="OpenIframeCustom" onClick="loadOpenIframeCustom();"> <br/><br/>
+  <input type="button" name="btnPWCapture" id="btnPWCapture" value="Solicitar codigo de verificacion" onClick="solicitoCodigoDeVerificacion();"> <br/><br/>
+  <input type="button" name="btnCustomToken" id="btnCustomToken" value="GetCustomToken para redes de pago" onClick="onNotificationInfo();"> <br/><br/>
+  <input type="hidden" name="PWToken" id="PWToken" /> <br/>
+  <span> One time token </span>
+  <input type="text" name="token" id="token" style="width: 500px" /> <br/>
+  <span> Notification </span>
+  <input type="text" name="notifStatus" id="notifStatus" style="width: 200px" /> <br/>
+</form> 
+
+
+</body>
+</html>
